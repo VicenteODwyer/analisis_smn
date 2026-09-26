@@ -58,3 +58,30 @@ def leer_observaciones(ruta: str) -> dict:
     except FileNotFoundError:
         print("Error: No se encontró el archivo de datos.")
     return obs
+def cantidad_ciudades(obs: dict) -> int:
+    return len(obs)
+
+def cantidad_ciudades_completas(obs: dict) -> int:
+    completas = 0
+    for datos in obs.values():
+        if None not in datos.values():
+            completas += 1
+    return completas
+
+def top_n_ciudades(obs: dict, campo: str, n: int, descendente: bool = True) -> list:
+    validas = []
+    for ciudad, datos in obs.items():
+        if datos[campo] is not None:
+            validas.append((ciudad, datos[campo]))
+    
+    validas.sort(key=lambda x: x[1], reverse=descendente)
+    return validas[:n]
+
+def horarios_reportados(obs: dict) -> list:
+    horarios = set()
+    for datos in obs.values():
+        h = datos["fecha_hora"].strftime("%H:%M")
+        horarios.add(h)
+    lista = list(horarios)
+    lista.sort()
+    return lista
