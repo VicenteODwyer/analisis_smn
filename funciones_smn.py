@@ -24,3 +24,37 @@ def separar_viento(campo_viento: str) -> tuple:
         except:
             return (partes[0].strip(), 0.0)
     return (v, 0.0)
+
+def leer_observaciones(ruta: str) -> dict:
+    obs = {}
+    try:
+        with open(ruta, 'r', encoding='utf-8') as f:
+            for linea in f:
+                campos = linea.strip().split(';')
+                if len(campos) != 10:
+                    continue 
+                
+                ciudad = campos[0].strip()
+                fecha_hora = parsear_fecha_hora(campos[1].strip(), campos[2].strip())
+                
+                try: temp = float(campos[5])
+                except: temp = None
+                
+                if campos[6].strip().lower() == "no se calcula":
+                    sensacion = None
+                else:
+                    try: sensacion = float(campos[6])
+                    except: sensacion = None
+                
+                v_dir, v_vel = separar_viento(campos[8])
+                
+                obs[ciudad] = {
+                    "fecha_hora": fecha_hora, "condicion": campos[3].strip(),
+                    "visibilidad": campos[4].strip(), "temperatura": temp,
+                    "sensacion_termica": sensacion, "humedad": campos[7].strip(),
+                    "direccion_viento": v_dir, "velocidad_viento": v_vel,
+                    "presion": campos[9].strip()
+                }
+    except FileNotFoundError:
+        print("Error: No se encontró el archivo de datos.")
+    return obs
