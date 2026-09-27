@@ -28,7 +28,7 @@ def separar_viento(campo_viento: str) -> tuple:
 def leer_observaciones(ruta: str) -> dict:
     obs = {}
     try:
-        with open(ruta, 'r', encoding='utf-8') as f:
+        with open(ruta, 'r', encoding='latin-1') as f:
             for linea in f:
                 campos = linea.strip().split(';')
                 if len(campos) != 10:
@@ -58,6 +58,7 @@ def leer_observaciones(ruta: str) -> dict:
     except FileNotFoundError:
         print("Error: No se encontró el archivo de datos.")
     return obs
+
 def cantidad_ciudades(obs: dict) -> int:
     return len(obs)
 
@@ -85,3 +86,16 @@ def horarios_reportados(obs: dict) -> list:
     lista = list(horarios)
     lista.sort()
     return lista
+
+def reporte_faltantes(obs: dict) -> dict:
+    faltantes = {
+        "temperatura": [], "sensacion_termica": [],
+        "humedad": [], "presion": []
+    }
+    
+    for ciudad, datos in obs.items():
+        for campo in faltantes.keys():
+            if datos[campo] is None:
+                faltantes[campo].append(ciudad)
+                
+    return faltantes

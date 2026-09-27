@@ -19,6 +19,11 @@ def mostrar_resumen(obs: dict) -> None:
     for c, v in top_n_ciudades(obs, "velocidad_viento", 5, True):
         print(f"{c}: {v} km/h")
 
+    print("\n--- DATOS FALTANTES ---")
+    faltantes = reporte_faltantes(obs)
+    for campo, ciudades in faltantes.items():
+        if len(ciudades) > 0:
+            print(f"{campo.capitalize()}: Falta en {len(ciudades)} ciudades ({', '.join(ciudades[:3])}...)")
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Error: Tenes que pasar el txt. Ejemplo: python analisis_smn.py datos/observaciones.txt")
