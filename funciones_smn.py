@@ -72,9 +72,10 @@ def leer_observaciones(ruta: str) -> dict:
             except ValueError: sensacion = None
         
         v_dir, v_vel = separar_viento(campos[8])
-        
+
+        fecha_iso = fecha_hora.isoformat(timespec='minutes')
         obs[ciudad] = {
-            "fecha_hora": fecha_hora, "condicion": campos[3].strip(),
+            "fecha_hora": fecha_iso, "condicion": campos[3].strip(),
             "visibilidad": campos[4].strip(), "temperatura": temp,
             "sensacion_termica": sensacion, "humedad": campos[7].strip(),
             "direccion_viento": v_dir, "velocidad_viento": v_vel,
