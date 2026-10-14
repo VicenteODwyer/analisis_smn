@@ -4,7 +4,35 @@ import json
 from funciones_smn import *
 
 def procesar_txt(ruta_txt):
-    print(f"Detectado archivo SMN: {ruta_txt}")
+    print("archivo del SMN, convirtiendo a json...")
+    #Leemos el archivo usando la función que ya armamos 
+    datos, lineas_rotas = leer_observaciones(ruta_txt)
+    
+    if not datos:
+        return
+
+    #Verificamos si existe la carpeta de destino y la creamos si hace falta
+    directorio_destino = "obs_json"
+    if not os.path.exists(directorio_destino):
+        print(f"el directorio {directorio_destino} no existe, creándolo...")
+        os.makedirs(directorio_destino)
+        
+    #Armamos la ruta del nuevo archivo .json
+    #os.path.basename saca solo el nombre ("estado_tiempo.txt") de la ruta entera
+    nombre_base = os.path.basename(ruta_txt)
+    #os.path.splitext separa el nombre de la extensión (".txt")
+    nombre_sin_ext = os.path.splitext(nombre_base)[0]
+    ruta_destino = os.path.join(directorio_destino, nombre_sin_ext + ".json")
+    
+    #Guardamos el diccionario como archivo JSON asegurando UTF-8
+    with open(ruta_destino, 'w', encoding='utf-8') as f:
+        #ensure_ascii=False es para que no rompa las tildes al exportar
+        json.dump(datos, f, ensure_ascii=False, indent=4)
+        
+    print("archivo guardado exitosamente.")
+    
+    print(f"Cantidad de ciudades que contiene el archivo: {cantidad_ciudades(datos)}")
+    print(f"Cantidad de ciudades informadas: {cantidad_ciudades_completas(datos)}")
     
 
 def procesar_json(ruta_json):
