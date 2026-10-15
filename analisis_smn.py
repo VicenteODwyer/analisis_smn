@@ -36,7 +36,19 @@ def procesar_txt(ruta_txt):
     
 
 def procesar_json(ruta_json):
-    print(f"Detectado archivo JSON: {ruta_json}")
+    try:
+        # Abrimos el archivo JSON forzando utf-8 como pide el profe
+        with open(ruta_json, 'r', encoding='utf-8') as f:
+            datos = json.load(f)
+            
+        # Imprimimos exactamente el mismo resumen de 2 líneas
+        print(f"Cantidad de ciudades que contiene el archivo: {cantidad_ciudades(datos)}")
+        print(f"Cantidad de ciudades informadas: {cantidad_ciudades_completas(datos)}")
+        
+    except FileNotFoundError:
+        print("Error: No se encontró el archivo JSON en la ruta indicada.")
+    except json.JSONDecodeError:
+        print("Error: El archivo no tiene un formato JSON válido.")
     
 
 def contar_archivos_directorios():
